@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hussien Abbas | Flutter & Full-Stack Engineer</title>
+
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: '#0a0a0a', // Deep charcoal background
+                        surface: '#171717',
+                        surfaceHover: '#262626',
+                        neonCyan: '#00f3ff', // Neon Cyan accent
+                        neonBlue: '#3b82f6', // Neon Blue accent
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Outfit', 'sans-serif'],
+                    },
+                    animation: {
+                        'float': 'float 3s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts: Inter for body, Outfit for headings -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Lucide Icons via CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Custom CSS Styles -->
+    <style>
+        body {
+            background-color: theme('colors.dark');
+            color: #e5e5e5;
+            overflow-x: hidden;
+        }
+
+        /* Custom Scrollbar for dark theme */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #262626;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00f3ff;
+        }
+
+        /* Intersection Observer Animation Utility Classes */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-left {
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: all 0.8s ease-out;
+        }
+
+        .reveal-left.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .reveal-right {
+            opacity: 0;
+            transform: translateX(50px);
+            transition: all 0.8s ease-out;
+        }
+
+        .reveal-right.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Glassmorphism Effect */
+        .glass {
+            background: rgba(23, 23, 23, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Neon Glow Hover Effect */
+        .hover-glow:hover {
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
+            border-color: rgba(0, 243, 255, 0.5);
+        }
+
+        /* Gradient Text */
+        .text-gradient {
+            background: linear-gradient(to right, #00f3ff, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    </style>
+</head>
+
+<body class="antialiased font-sans selection:bg-neonCyan selection:text-dark relative">
+
+    <!-- Ambient Background Gradients -->
+    <div class="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
+        <div
+            class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-neonCyan opacity-[0.03] blur-[100px]">
+        </div>
+        <div
+            class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-neonBlue opacity-[0.03] blur-[100px]">
+        </div>
+    </div>
+
+    <!-- Navigation Header -->
+    <nav class="fixed w-full z-50 glass transition-all duration-300 border-b border-white/5" id="navbar">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+            <!-- Logo -->
+            <a href="#" class="text-2xl font-heading font-bold text-white tracking-wider">HA<span
+                    class="text-neonCyan">.</span></a>
+
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex space-x-8 items-center">
+                <a href="#about"
+                    class="text-sm font-medium text-gray-400 hover:text-neonCyan transition-colors">About</a>
+                <a href="#experience"
+                    class="text-sm font-medium text-gray-400 hover:text-neonCyan transition-colors">Experience</a>
+                <a href="#skills"
+                    class="text-sm font-medium text-gray-400 hover:text-neonCyan transition-colors">Skills</a>
+                <a href="#projects"
+                    class="text-sm font-medium text-gray-400 hover:text-neonCyan transition-colors">Projects</a>
+                <a href="#contact"
+                    class="px-5 py-2 rounded-full border border-neonCyan text-neonCyan hover:bg-neonCyan hover:text-dark transition-all duration-300 text-sm font-semibold">Let's
+                    Talk</a>
+            </div>
+
+            <!-- Mobile Menu Toggle Button -->
+            <button class="md:hidden text-gray-300 hover:text-white transition-colors" id="mobile-menu-btn">
+                <i data-lucide="menu" class="w-6 h-6"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div class="md:hidden hidden bg-surface border-t border-gray-800 absolute w-full" id="mobile-menu">
+            <div class="flex flex-col px-6 py-4 space-y-4">
+                <a href="#about" class="text-gray-400 hover:text-neonCyan transition-colors mobile-link">About</a>
+                <a href="#experience"
+                    class="text-gray-400 hover:text-neonCyan transition-colors mobile-link">Experience</a>
+                <a href="#skills" class="text-gray-400 hover:text-neonCyan transition-colors mobile-link">Skills</a>
+                <a href="#projects" class="text-gray-400 hover:text-neonCyan transition-colors mobile-link">Projects</a>
+                <a href="#contact" class="text-neonCyan font-semibold mobile-link">Let's Talk</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="about" class="min-h-screen flex items-center justify-center relative pt-20 px-6">
+        <div class="max-w-4xl mx-auto text-center z-10">
+            <!-- Availability Badge -->
+            <div
+                class="inline-flex items-center space-x-2 bg-surface px-4 py-2 rounded-full border border-gray-800 mb-8 reveal animate-float">
+                <span class="w-2 h-2 rounded-full bg-neonCyan animate-pulse"></span>
+                <span class="text-xs font-mono text-gray-300 tracking-wider">AVAILABLE FOR HIRE</span>
+            </div>
+
+            <!-- Profile Image Placeholder -->
+            <div class="mb-8 flex justify-center reveal" style="transition-delay: 50ms;">
+                <div
+                    class="relative w-40 h-40 md:w-48 md:h-48 rounded-full border-4 border-gray-800 overflow-hidden hover:border-neonCyan transition-all duration-500 shadow-[0_0_20px_rgba(0,0,0,0.5)] hover:shadow-[0_0_30px_rgba(0,243,255,0.3)] group">
+                    <!-- استبدل الجملة 'YOUR_IMAGE_LINK_HERE' بالمسار بتاع صورتك هنا -->
+                    <img src="Kenpachi.jpg" alt="Hussien Abbas"
+                        class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                    <div
+                        class="absolute inset-0 bg-neonCyan/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Headline -->
+            <h1 class="text-5xl md:text-7xl font-heading font-extrabold text-white mb-6 leading-tight reveal"
+                style="transition-delay: 100ms;">
+                Hi, I'm <span class="text-gradient">Hussien Abbas</span>
+            </h1>
+
+            <!-- Sub-headline -->
+            <p class="text-xl md:text-3xl font-heading text-gray-300 mb-8 reveal" style="transition-delay: 200ms;">
+                Flutter & Full-Stack Engineer
+            </p>
+
+            <p class="text-gray-400 max-w-2xl mx-auto mb-10 text-lg reveal" style="transition-delay: 300ms;">
+                4th-year Software Engineering student dedicated to building high-performance mobile applications and
+                scalable backend systems. Passionate about crafting seamless, pixel-perfect digital experiences.
+            </p>
+
+            <!-- Call to Actions -->
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 reveal"
+                style="transition-delay: 400ms;">
+                <a href="#projects"
+                    class="w-full sm:w-auto px-8 py-4 bg-neonCyan text-dark font-bold rounded-lg hover:bg-white transition-colors flex items-center justify-center space-x-2">
+                    <span>View My Work</span>
+                    <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                </a>
+
+                <!-- Replace '#' with the actual path to your resume file when hosting -->
+                <a href="#"
+                    download="https://drive.google.com/file/d/1HoUWz8VdHlPiEpUaTXYC2lPT5eYUNDL9/view?usp=sharing"
+                    class="w-full sm:w-auto px-8 py-4 bg-surface border border-gray-700 text-white font-semibold rounded-lg hover:border-neonCyan hover:text-neonCyan transition-all flex items-center justify-center space-x-2 group">
+                    <i data-lucide="download" class="w-5 h-5 group-hover:-translate-y-1 transition-transform"></i>
+                    <span>Download CV</span>
+                </a>
+            </div>
+
+            <!-- Social Links Quick Access -->
+            <div class="flex items-center justify-center gap-6 mt-16 reveal" style="transition-delay: 500ms;">
+                <a href="https://github.com/Hussien-Abbas" target="_blank"
+                    class="text-gray-500 hover:text-white transition-colors group">
+                    <i data-lucide="github" class="w-7 h-7 group-hover:scale-110 transition-transform"></i>
+                </a>
+                <a href="https://www.linkedin.com/in/hussien-abbas-10bb05284" target="_blank"
+                    class="text-gray-500 hover:text-[#0a66c2] transition-colors group">
+                    <i data-lucide="linkedin" class="w-7 h-7 group-hover:scale-110 transition-transform"></i>
+                </a>
+                <a href="mailto:abbashussien650@gmail.com"
+                    class="text-gray-500 hover:text-neonCyan transition-colors group">
+                    <i data-lucide="mail" class="w-7 h-7 group-hover:scale-110 transition-transform"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Scroll indicator -->
+        <div
+            class="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center animate-bounce text-gray-500">
+            <span class="text-xs font-mono mb-2 uppercase tracking-widest">Scroll</span>
+            <i data-lucide="mouse" class="w-5 h-5"></i>
+        </div>
+    </section>
+
+    <!-- Experience & Training Section -->
+    <section id="experience" class="py-24 px-6 bg-surface/30">
+        <div class="max-w-6xl mx-auto">
+            <!-- Section Header -->
+            <div class="flex items-center mb-16 reveal">
+                <h2 class="text-3xl md:text-5xl font-heading font-bold text-white">Experience <span
+                        class="text-neonCyan">&</span> Training</h2>
+                <div class="h-px bg-gray-800 flex-grow ml-8"></div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Training Card 1: NTI -->
+                <div
+                    class="glass p-8 rounded-2xl border border-gray-800 hover-glow transition-all duration-300 reveal-left">
+                    <div
+                        class="w-12 h-12 bg-neonCyan/10 rounded-lg flex items-center justify-center mb-6 text-neonCyan">
+                        <i data-lucide="award" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-2xl font-heading font-bold text-white mb-2">Intensive Training Program</h3>
+                    <h4 class="text-lg text-neonBlue font-medium mb-4">NTI (National Telecommunication Institute)</h4>
+                    <p class="text-gray-400 mb-6">
+                        Completed a rigorous technical training program focusing on modern software engineering
+                        practices, foundational computer science principles, and practical application development.
+                    </p>
+                    <div class="flex items-center space-x-2 text-sm text-gray-500 font-mono">
+                        <i data-lucide="clock" class="w-4 h-4"></i>
+                        <span>120+ Hours</span>
+                    </div>
+                </div>
+
+                <!-- Training Card 2: ITI -->
+                <div
+                    class="glass p-8 rounded-2xl border border-gray-800 hover-glow transition-all duration-300 reveal-right">
+                    <div
+                        class="w-12 h-12 bg-neonBlue/10 rounded-lg flex items-center justify-center mb-6 text-neonBlue">
+                        <i data-lucide="book-open" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-2xl font-heading font-bold text-white mb-2">Advanced Development Track</h3>
+                    <h4 class="text-lg text-neonCyan font-medium mb-4">ITI (Information Technology Institute)</h4>
+                    <p class="text-gray-400 mb-6">
+                        Completed specialized hands-on training, diving deep into advanced frameworks, architectural
+                        patterns, and the lifecycle of building enterprise-grade software applications.
+                    </p>
+                    <div class="flex items-center space-x-2 text-sm text-gray-500 font-mono">
+                        <i data-lucide="clock" class="w-4 h-4"></i>
+                        <span>120+ Hours</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Education / Degree Summary -->
+            <div class="mt-8 glass p-6 rounded-2xl border border-gray-800 flex items-center justify-between flex-wrap gap-4 reveal"
+                style="transition-delay: 200ms;">
+                <div class="flex items-center space-x-4">
+                    <div class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center text-white">
+                        <i data-lucide="graduation-cap" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-white font-medium">B.Sc. Software Engineering</h4>
+                        <p class="text-sm text-gray-400">4th Year Student</p>
+                    </div>
+                </div>
+                <div
+                    class="px-4 py-2 bg-neonCyan/10 text-neonCyan rounded-full text-sm font-medium border border-neonCyan/20">
+                    240+ Total Training Hours
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="py-24 px-6">
+        <div class="max-w-6xl mx-auto">
+            <!-- Section Header -->
+            <div class="flex items-center mb-16 reveal">
+                <h2 class="text-3xl md:text-5xl font-heading font-bold text-white">Technical <span
+                        class="text-neonCyan">Arsenal</span></h2>
+                <div class="h-px bg-gray-800 flex-grow ml-8"></div>
+            </div>
+
+            <!-- Skills Grid -->
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Mobile Skills -->
+                <div class="bg-surface p-6 rounded-xl border border-gray-800 hover:border-neonCyan transition-colors group reveal"
+                    style="transition-delay: 100ms;">
+                    <div class="flex items-center space-x-3 mb-6 border-b border-gray-800 pb-4">
+                        <i data-lucide="smartphone" class="w-6 h-6 text-neonCyan"></i>
+                        <h3 class="text-lg font-bold text-white tracking-wide">Mobile</h3>
+                    </div>
+                    <ul class="space-y-3">
+                        <li class="flex items-center space-x-2 text-gray-300 group-hover:text-white transition-colors">
+                            <i data-lucide="chevron-right" class="w-4 h-4 text-neonCyan"></i>
+                            <span>Flutter</span>
+                        </li>
+                        <li class="flex items-center space-x-2 text-gray-300 group-hover:text-white transition-colors">
+                            <i data-lucide="chevron-right" class="w-4 h-4 text-neonCyan"></i>
+                            <span>Dart</span>
+                        </li>
+                        <li class="flex items-center space-x-2 text-gray-300 group-hover:text-white transition-colors">
+                            <i data-lucide="chevron-right" class="w-4 h-4 text-neonCyan"></i>
+                            <span>Responsive UI Design</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- State Management -->
+                <div class="bg-surface p-6 rounded-xl border border-gray-800 hover:border-neonBlue transition-colors group reveal"
+                    style="transition-delay: 200ms;">
+                    <div class="flex items-center space-x-3 mb-6 border-b border-gray-800 pb-4">
+                        <i data-lucide="layers" class="w-6 h-6 text-neonBlue"></i>
+                        <h3 class="text-lg font-bold text-white tracking-wide">State Mgmt</h3>
+                    </div>
+                    <ul class="space-y-3">
+                        <li class="flex items-center space-x-2 text-gray-300 group-hover:text-white transition-colors">
+                            <i data-lucide="chevron-right" class="w-4 h-4 text-neonBlue"></i>
+                            <span>Bloc / Cubit</span>
+                        </li>
+                        <li class="flex items-center space-x-2 text-gray-300 group-hover:text-white transition-colors">
+                            <i data-lucide="chevron-right" class="w-4 h-4 text-neonBlue"></i>
+                            <span>Provider</span>
+                        </li>
+                        <li class="flex items-center space-x-2 text-gray-300 group-hover:text-white transition-colors">
+                            <i data-lucide="chevron-right" class="w-4 h-4 text-neonBlue"></i>
+                            <span>GetX</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Backend & APIs -->
+                <div class="bg-surface p-6 rounded-xl border border-gray-800 hover:border-neonCyan transition-colors group reveal"
+                    style="transition-delay: 300ms;">
+                    <div class="flex items-center space-x-3 mb-6 border-b border-gray-800 pb-4">
+                        <i data-lucide="database" class="w-6 h-6 text-neonCyan"></i>
+                        <h3 class="text-lg font-bold text-white tracking-wide">Backend</h3>
+                    </div>
+                    <ul class="space-y-3">
+                        <li class="flex items-center space-x-2 text-gray-300 group-hover:text-white transition-colors">
+                            <i data-lucide="chevron-right" class="w-4 h-4 text-neonCyan"></i>
+                            <span>Firebase / Firestore</span>
+                        </li>
+                        <li class="flex items-center space-x-2 text-gray-300 group-hover:text-white transition-colors">
+                            <i data-lucide="chevron-right" class="w-4 h-4 text-neonCyan"></i>
+                            <span>RESTful APIs Integrations</span>
+                        </li>
+                        <li class="flex items-center space-x-2 text-gray-300 group-hover:text-white transition-colors">
+                            <i data-lucide="chevron-right" class="w-4 h-4 text-neonCyan"></i>
+                            <span>Node.js</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- CS Fundamentals -->
+                <div class="bg-surface p-6 rounded-xl border border-gray-800 hover:border-neonBlue transition-colors group reveal"
+                    style="transition-delay: 400ms;">
+                    <div class="flex items-center space-x-3 mb-6 border-b border-gray-800 pb-4">
+                        <i data-lucide="cpu" class="w-6 h-6 text-neonBlue"></i>
+                        <h3 class="text-lg font-bold text-white tracking-wide">CS Core</h3>
+                    </div>
+                    <ul class="space-y-3">
+                        <li class="flex items-center space-x-2 text-gray-300 group-hover:text-white transition-colors">
+                            <i data-lucide="chevron-right" class="w-4 h-4 text-neonBlue"></i>
+                            <span>Data Structures</span>
+                        </li>
+                        <li class="flex items-center space-x-2 text-gray-300 group-hover:text-white transition-colors">
+                            <i data-lucide="chevron-right" class="w-4 h-4 text-neonBlue"></i>
+                            <span>Algorithms</span>
+                        </li>
+                        <li class="flex items-center space-x-2 text-gray-300 group-hover:text-white transition-colors">
+                            <i data-lucide="chevron-right" class="w-4 h-4 text-neonBlue"></i>
+                            <span>OOP & SOLID Principles</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-24 px-6 bg-surface/30">
+        <div class="max-w-6xl mx-auto">
+            <!-- Section Header -->
+            <div class="flex items-center mb-16 reveal">
+                <h2 class="text-3xl md:text-5xl font-heading font-bold text-white">Featured <span
+                        class="text-neonCyan">Projects</span></h2>
+                <div class="h-px bg-gray-800 flex-grow ml-8"></div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-10">
+
+                <!-- Project 1: RunWay-Fashion -->
+                <div
+                    class="group rounded-2xl overflow-hidden glass border border-gray-800 hover-glow transition-all duration-500 reveal">
+                    <div class="h-64 bg-gray-900 relative overflow-hidden flex items-center justify-center p-8">
+                        <div
+                            class="absolute inset-0 bg-gradient-to-br from-neonCyan/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                        </div>
+                        <i data-lucide="shopping-bag"
+                            class="w-24 h-24 text-gray-700 group-hover:text-neonCyan transition-colors duration-500 group-hover:scale-110"></i>
+                    </div>
+                    <div class="p-8">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3
+                                    class="text-2xl font-bold text-white mb-2 font-heading group-hover:text-neonCyan transition-colors">
+                                    RunWay-Fashion</h3>
+                                <p class="text-neonCyan text-sm font-mono mb-4">E-Commerce Application</p>
+                            </div>
+                            <a href="https://github.com/Hussien-Abbas/RunWay_fashion.git" target="_blank"
+                                class="text-gray-400 hover:text-white transition-colors bg-gray-800 p-2 rounded-full shadow-lg"
+                                aria-label="View Source on GitHub">
+                                <i data-lucide="github" class="w-5 h-5"></i>
+                            </a>
+                        </div>
+                        <p class="text-gray-400 mb-6">
+                            A comprehensive clothing store application featuring a highly reusable UI component
+                            architecture and persistent cart management for a seamless shopping experience.
+                        </p>
+                        <div class="flex flex-wrap gap-2">
+                            <span
+                                class="px-3 py-1 bg-gray-800 border border-gray-700 text-xs text-gray-300 rounded-full font-mono">Flutter</span>
+                            <span
+                                class="px-3 py-1 bg-gray-800 border border-gray-700 text-xs text-gray-300 rounded-full font-mono">Provider</span>
+                            <span
+                                class="px-3 py-1 bg-gray-800 border border-gray-700 text-xs text-gray-300 rounded-full font-mono">Persistent
+                                Carts</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 2: Anubis Gym App -->
+                <div class="group rounded-2xl overflow-hidden glass border border-gray-800 hover-glow transition-all duration-500 reveal"
+                    style="transition-delay: 100ms;">
+                    <div class="h-64 bg-gray-900 relative overflow-hidden flex items-center justify-center p-8">
+                        <div
+                            class="absolute inset-0 bg-gradient-to-br from-neonBlue/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                        </div>
+                        <i data-lucide="activity"
+                            class="w-24 h-24 text-gray-700 group-hover:text-neonBlue transition-colors duration-500 group-hover:scale-110"></i>
+                    </div>
+                    <div class="p-8">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3
+                                    class="text-2xl font-bold text-white mb-2 font-heading group-hover:text-neonBlue transition-colors">
+                                    Anubis Gym App</h3>
+                                <p class="text-neonBlue text-sm font-mono mb-4">Management System</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-400 mb-6">
+                            A robust gym management system built to handle member data, subscriptions, and routines.
+                            Integrates Firebase for real-time database capabilities and Bloc for scalable state
+                            management.
+                        </p>
+                        <div class="flex flex-wrap gap-2">
+                            <span
+                                class="px-3 py-1 bg-gray-800 border border-gray-700 text-xs text-gray-300 rounded-full font-mono">Flutter</span>
+                            <span
+                                class="px-3 py-1 bg-gray-800 border border-gray-700 text-xs text-gray-300 rounded-full font-mono">Firebase</span>
+                            <span
+                                class="px-3 py-1 bg-gray-800 border border-gray-700 text-xs text-gray-300 rounded-full font-mono">Bloc
+                                State Mgmt</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 3: Miss Chef Marketplace -->
+                <div
+                    class="group rounded-2xl overflow-hidden glass border border-gray-800 hover-glow transition-all duration-500 reveal">
+                    <div class="h-64 bg-gray-900 relative overflow-hidden flex items-center justify-center p-8">
+                        <div
+                            class="absolute inset-0 bg-gradient-to-br from-orange-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                        </div>
+                        <i data-lucide="utensils-crossed"
+                            class="w-24 h-24 text-gray-700 group-hover:text-orange-400 transition-colors duration-500 group-hover:scale-110"></i>
+                    </div>
+                    <div class="p-8">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3
+                                    class="text-2xl font-bold text-white mb-2 font-heading group-hover:text-orange-400 transition-colors">
+                                    Miss Chef</h3>
+                                <p class="text-orange-400 text-sm font-mono mb-4">Food Marketplace</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-400 mb-6">
+                            A dynamic food marketplace application integrating the Google Maps API for precise location
+                            tracking and featuring highly optimized image loading logic for better performance.
+                        </p>
+                        <div class="flex flex-wrap gap-2">
+                            <span
+                                class="px-3 py-1 bg-gray-800 border border-gray-700 text-xs text-gray-300 rounded-full font-mono">Flutter</span>
+                            <span
+                                class="px-3 py-1 bg-gray-800 border border-gray-700 text-xs text-gray-300 rounded-full font-mono">Google
+                                Maps API</span>
+                            <span
+                                class="px-3 py-1 bg-gray-800 border border-gray-700 text-xs text-gray-300 rounded-full font-mono">Image
+                                Optimization</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 4: World Time Tracker -->
+                <div class="group rounded-2xl overflow-hidden glass border border-gray-800 hover-glow transition-all duration-500 reveal"
+                    style="transition-delay: 100ms;">
+                    <div class="h-64 bg-gray-900 relative overflow-hidden flex items-center justify-center p-8">
+                        <div
+                            class="absolute inset-0 bg-gradient-to-br from-purple-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                        </div>
+                        <i data-lucide="globe"
+                            class="w-24 h-24 text-gray-700 group-hover:text-purple-400 transition-colors duration-500 group-hover:scale-110"></i>
+                    </div>
+                    <div class="p-8">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3
+                                    class="text-2xl font-bold text-white mb-2 font-heading group-hover:text-purple-400 transition-colors">
+                                    World Time Tracker</h3>
+                                <p class="text-purple-400 text-sm font-mono mb-4">Utility Application</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-400 mb-6">
+                            A complex utility app that syncs real-time global data by successfully orchestrating
+                            asynchronous requests across 10+ different APIs simultaneously.
+                        </p>
+                        <div class="flex flex-wrap gap-2">
+                            <span
+                                class="px-3 py-1 bg-gray-800 border border-gray-700 text-xs text-gray-300 rounded-full font-mono">Dart</span>
+                            <span
+                                class="px-3 py-1 bg-gray-800 border border-gray-700 text-xs text-gray-300 rounded-full font-mono">REST
+                                Integration</span>
+                            <span
+                                class="px-3 py-1 bg-gray-800 border border-gray-700 text-xs text-gray-300 rounded-full font-mono">Async
+                                Ops</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-24 px-6 relative overflow-hidden">
+        <!-- Ambient bottom glow -->
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent to-neonCyan/5 pointer-events-none"></div>
+
+        <div class="max-w-4xl mx-auto text-center relative z-10">
+            <h2 class="text-4xl md:text-6xl font-heading font-extrabold text-white mb-6 reveal">Ready to <span
+                    class="text-gradient">Collaborate?</span></h2>
+            <p class="text-gray-400 text-lg mb-12 max-w-2xl mx-auto reveal" style="transition-delay: 100ms;">
+                Currently seeking new opportunities to build amazing products. Whether you have a question, a project
+                proposal, or just want to say hi, my inbox is always open.
+            </p>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-6 reveal"
+                style="transition-delay: 200ms;">
+                <!-- Email Action -->
+                <a href="mailto:abbashussien650@gmail.com"
+                    class="w-full sm:w-auto px-8 py-4 bg-neonCyan text-dark font-bold rounded-lg hover:bg-white transition-all duration-300 flex items-center justify-center space-x-3 group shadow-[0_0_20px_rgba(0,243,255,0.3)]">
+                    <i data-lucide="mail" class="w-5 h-5"></i>
+                    <span>abbashussien650@gmail.com</span>
+                </a>
+
+                <!-- Phone Action -->
+                <a href="tel:01099911743"
+                    class="w-full sm:w-auto px-8 py-4 glass text-white font-medium rounded-lg hover:border-neonCyan transition-all duration-300 flex items-center justify-center space-x-3 border border-gray-800">
+                    <i data-lucide="phone" class="w-5 h-5 text-neonCyan"></i>
+                    <span>010 999 11743</span>
+                </a>
+            </div>
+
+            <!-- Detailed Social / Professional Links -->
+            <div class="mt-16 flex items-center justify-center space-x-8 reveal" style="transition-delay: 300ms;">
+                <a href="https://github.com/Hussien-Abbas" target="_blank"
+                    class="flex flex-col items-center space-y-3 group">
+                    <div
+                        class="w-16 h-16 glass rounded-full flex items-center justify-center border border-gray-800 group-hover:border-white transition-all duration-300 group-hover:-translate-y-2 group-hover:shadow-lg group-hover:shadow-white/10">
+                        <i data-lucide="github" class="w-7 h-7 text-gray-400 group-hover:text-white"></i>
+                    </div>
+                    <span
+                        class="text-sm text-gray-500 font-medium group-hover:text-white transition-colors">GitHub</span>
+                </a>
+
+                <a href="https://www.linkedin.com/in/hussien-abbas-10bb05284" target="_blank"
+                    class="flex flex-col items-center space-y-3 group">
+                    <div
+                        class="w-16 h-16 glass rounded-full flex items-center justify-center border border-gray-800 group-hover:border-[#0a66c2] transition-all duration-300 group-hover:-translate-y-2 group-hover:shadow-lg group-hover:shadow-[#0a66c2]/20">
+                        <i data-lucide="linkedin" class="w-7 h-7 text-gray-400 group-hover:text-[#0a66c2]"></i>
+                    </div>
+                    <span
+                        class="text-sm text-gray-500 font-medium group-hover:text-[#0a66c2] transition-colors">LinkedIn</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-8 border-t border-gray-900 bg-surface text-center px-6">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <p class="text-gray-500 text-sm">
+                &copy; <span id="year"></span> Hussien Abbas. All rights reserved.
+            </p>
+            <p class="text-gray-600 text-sm flex items-center">
+                Built with <i data-lucide="code" class="w-4 h-4 text-neonCyan mx-1"></i> & Tailwind CSS
+            </p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // 1. Initialize Lucide Icons
+        lucide.createIcons();
+
+        // 2. Set current year in footer dynamically
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // 3. Mobile Menu Toggle Logic
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // 4. Navbar Blur & Shadow Effect on Scroll
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 20) {
+                navbar.classList.add('shadow-lg', 'shadow-black/50', 'bg-surface/80');
+                navbar.classList.remove('border-white/5');
+            } else {
+                navbar.classList.remove('shadow-lg', 'shadow-black/50', 'bg-surface/80');
+                navbar.classList.add('border-white/5');
+            }
+        });
+
+        // 5. Intersection Observer for Scroll Reveal Animations
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.15 // Trigger when 15% of element is visible
+        };
+
+        const revealElements = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
+
+        const scrollObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    // Optional: Prevent animation from repeating when scrolling back up
+                    // observer.unobserve(entry.target); 
+                }
+            });
+        }, observerOptions);
+
+        revealElements.forEach(el => {
+            scrollObserver.observe(el);
+        });
+    </script>
+</body>
+
+</html>
